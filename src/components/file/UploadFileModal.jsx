@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 const UploadFileModal = () => {
     const { data: session } = useSession();
     const { parentFolder, setParentFolder } = useParentFolder()
+    const { setNewFileCreated } = useParentFolder()
     const [loading, setLoading] = useState()
 
     const docId = Date.now();
@@ -40,11 +41,13 @@ const UploadFileModal = () => {
                     size: file.size,
                     modifiedAt: file.lastModified,
                     createdBy: session.user.email,
-                    folderId: parentFolder,
-                    imageURL: url
+                    folderId: parentFolder.id,
+                    imageURL: url,
+                    icon: '/document.png'
                 }
             )
             toast.success('File uploaded successfully!')
+            setNewFileCreated(true)
         } catch (error) {
             console.log(error)
             toast.error('Error uploading file!')

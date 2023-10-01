@@ -1,7 +1,8 @@
 'use client'
 import FileItem from "./FileItem"
 
-const FileList = () => {
+const FileList = ({ fileList, title }) => {
+    /*
     const fileList = [
         {
             id: 1,
@@ -32,10 +33,10 @@ const FileList = () => {
             modifiedAt: 'Nov 23,2020'
         },
     ]
-
+    */
     return (
         <div className='bg-white my-8 p-5 rounded-lg'>
-            <h2 className='text-[24px] font-bold items-center '>Recent Files</h2>
+            <h2 className='text-[24px] font-bold items-center '>{title}</h2>
             <div className='grid grid-cols-1
         md:grid-cols-2 
         text-[13px] 

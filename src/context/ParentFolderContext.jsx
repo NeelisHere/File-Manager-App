@@ -7,12 +7,13 @@ export const useParentFolder = () => useContext(ParentFolderContext)
 const ParentFolderProvider = ({ children }) => {
     const [parentFolder, setParentFolder] = useState(null)
     const [newFolderCreated, setNewFolderCreated] = useState(false)
-    
+    const [newFileCreated, setNewFileCreated] = useState(false)
     return (
         <ParentFolderContext.Provider 
             value={{ 
                 parentFolder, setParentFolder,
-                newFolderCreated, setNewFolderCreated 
+                newFolderCreated, setNewFolderCreated,
+                newFileCreated, setNewFileCreated 
             }}
         >
             { children }

@@ -7,41 +7,94 @@ import { collection, getDocs, getFirestore, query, where } from "firebase/firest
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
+import { useParentFolder } from "@/context/ParentFolderContext"
+import Spinner from "@/components/Spinner"
 
 export default function Home() {
 	const db = getFirestore(app)
 	const router = useRouter()
 	const { data: session }  = useSession()
-	const [folderList, setFolderList] = useState([])
+	const [loading, setLoading] = useState(false)
+	const [childFolders, setChildFolders] = useState([])
+	const [fileList, setFileList] = useState([])
+	const { newFolderCreated, setNewFolderCreated, newFileCreated, setNewFileCreated } = useParentFolder()
 
-	const getFolderList = async () => {
-		const q = query(
-			collection(db, 'Folders'), 
-			where('createdBy', '==', session.user.email)
-		)
-		let querySnapshot = await getDocs(q)
-		setFolderList((prevFolderList) => {
-			const newFolderList = []
-			querySnapshot.forEach((doc) => {
-				newFolderList.push(doc.data())
-			})
-			return newFolderList
-		})
+	const fetchChildFolders = async () => {
+        setLoading(true)
+        try {
+            // setChildFolders([])
+            const fetchChildFoldersQuery = query(
+                collection(db, 'Folders'),
+                where('createdBy', '==', session.user.email),
+                where('parentFolder', '==', null)
+            )
+            const querySnapshot = await getDocs(fetchChildFoldersQuery)
+            setChildFolders((prev) => {
+                const newFolderList = []
+                querySnapshot.forEach((doc) => {
+                    newFolderList.push(doc.data())
+                })
+                return newFolderList
+            })
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+	const fetchFileList = async () => {
+		setLoading(true)
+        try {
+            // setChildFolders([])
+            const fetchFilesQuery = query(
+                collection(db, 'Files'),
+                where('createdBy', '==', session.user.email),
+                where('folderId', '==', null)
+            )
+            const querySnapshot = await getDocs(fetchFilesQuery)
+            setFileList((prev) => {
+                const newFileList = []
+                querySnapshot.forEach((doc) => {
+                    newFileList.push(doc.data())
+                })
+                return newFileList
+            })
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
 	}
 
 	useEffect(() => {
-		if (!session) {
-			router.push('/login')
-		} else {
-			getFolderList()
-		}
-	},[session])
+        if (session) {
+            fetchChildFolders()
+			fetchFileList()
+        }
+        if (newFolderCreated) {
+            fetchChildFolders()
+            setNewFolderCreated(false)
+        }
+		if (newFileCreated) {
+            fetchFileList()
+            setNewFileCreated(false)
+        }
+    }, [session, newFolderCreated, setNewFolderCreated, newFileCreated, setNewFileCreated])
 
 	return (
 		<div className='px-8 py-4 pt-8 bg-gray-100'>
 			<Searchbar />
-			<FolderList folderList={folderList} title={'Recent Folders'} />
-			<FileList />
+			{
+				loading?
+				<Spinner />:
+				<FolderList folderList={childFolders} title={'Home'} />
+			}
+			{
+				loading?
+				<Spinner />:
+				<FileList fileList={fileList} title={'Home'} />
+			}
 		</div>
 	)
 }

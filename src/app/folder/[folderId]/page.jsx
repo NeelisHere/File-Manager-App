@@ -1,6 +1,7 @@
 "use client"
 import SearchBar from '@/components/Searchbar'
 import Spinner from '@/components/Spinner'
+import FileList from '@/components/file/FileList'
 import FolderList from '@/components/folder/FolderList'
 import { app } from '@/config/firebase-config'
 import { useParentFolder } from '@/context/ParentFolderContext'
@@ -10,9 +11,14 @@ import React, { useEffect, useState } from 'react'
 
 const FolderDetails = ({ params }) => {
     const { data: session } = useSession() 
-    const { setParentFolder, newFolderCreated, setNewFolderCreated } = useParentFolder()
+    const { 
+        setParentFolder, 
+        newFolderCreated, setNewFolderCreated, 
+        newFileCreated, setNewFileCreated 
+    } = useParentFolder()
     const [loading, setLoading] = useState(false)
     const [childFolders, setChildFolders] = useState([])
+    const [fileList, setFileList] = useState([])
     const [folder, setFolder] = useState(null)
     const db = getFirestore(app)
 
@@ -58,6 +64,30 @@ const FolderDetails = ({ params }) => {
         }
     }
 
+    const fetchFileList = async () => {
+		setLoading(true)
+        try {
+            // setChildFolders([])
+            const fetchFilesQuery = query(
+                collection(db, 'Files'),
+                where('createdBy', '==', session.user.email),
+                where('folderId', '==', params.folderId)
+            )
+            const querySnapshot = await getDocs(fetchFilesQuery)
+            setFileList((prev) => {
+                const newFileList = []
+                querySnapshot.forEach((doc) => {
+                    newFileList.push(doc.data())
+                })
+                return newFileList
+            })
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+	}
+
     useEffect(() => {
         fetchParentFolder()
     }, [])
@@ -65,12 +95,17 @@ const FolderDetails = ({ params }) => {
     useEffect(() => {
         if (folder && session) {
             fetchChildFolders()
+            fetchFileList()
         }
         if (newFolderCreated) {
             fetchChildFolders()
             setNewFolderCreated(false)
         }
-    }, [folder, session, newFolderCreated, setNewFolderCreated])
+        if (newFileCreated) {
+            fetchFileList()
+            setNewFileCreated(false)
+        }
+    }, [folder, session, newFolderCreated, setNewFolderCreated, newFileCreated, setNewFileCreated])
 
     return (
         <div className='px-8 py-4 pt-8 bg-gray-100'>
@@ -80,6 +115,13 @@ const FolderDetails = ({ params }) => {
                 (
                     loading?
                     <Spinner />:<FolderList folderList={childFolders} title={folder?.name} />
+                )
+            }
+            {
+                folder &&
+                (
+                    loading?
+                    <Spinner />:<FileList fileList={fileList} title={folder?.name} />
                 )
             }
         </div>

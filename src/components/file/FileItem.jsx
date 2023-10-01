@@ -1,5 +1,8 @@
 'use client'
 import Image from "next/image"
+import moment from 'moment'
+import toast from "react-hot-toast"
+
 
 const FileItem = ({ file }) => {
     const deleteFile = () => {}
@@ -9,31 +12,29 @@ const FileItem = ({ file }) => {
             md:grid-cols-2 justify-between
             cursor-pointer hover:bg-gray-100
             p-3 rounded-md"
+            onClick={() => window.open(file.imageURL)}
         >
             <div className="flex gap-2 items-center" >
                 <Image
-                    // src={image}
+                    src={file.icon}
                     alt="file-icon"
                     width={26}
                     height={20}
                     on
                 />
-                <h2 
-                    className="text-[15px] truncate"
-                    onClick={() => window.open(file.imageUrl)}
-                >
+                <h2 className="text-[15px] truncate">
                     {file.name}
                 </h2>
             </div>
             <div className="grid grid-cols-3 place-content-start">
                 <h2 className="text-[15px]">
-                    {/* {moment(file.modifiedAt).format("MMMM DD, YYYY")} */}
-                    { file.modifiedAt }
+                    {moment(file.modifiedAt).format("MMM DD, YYYY")}
+                    {/* { file.modifiedAt } */}
                 </h2>
 
                 <h2 className="text-[15px]">
-                    {/* {(file.size / 1024 ** 2).toFixed(2) + " MB"} */}
-                    {file.size}
+                    {(file.size / 1024 ** 2).toFixed(2) + " MB"}
+                    {/* {file.size} */}
                     <svg xmlns="http://www.w3.org/2000/svg" onClick={() => deleteFile(file)}
                         fill="none" viewBox="0 0 24 24"
                         strokeWidth={1.5} stroke="currentColor"
