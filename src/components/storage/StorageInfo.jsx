@@ -21,6 +21,7 @@ const StorageInfo = () => {
 
     useEffect(() => {
         if (session) {
+            totalSizeUsed.current = 0
             getAllfiles()
         }
     }, [])
@@ -28,18 +29,17 @@ const StorageInfo = () => {
     return (
         <div className='mt-7'>
             <h2 className="text-[22px] font-bold">
-                {totalSizeUsed.current} {" "}
+                {(totalSizeUsed.current/1024**2).toFixed(2)+" MB"} {" "}
                 <span className="text-[14px] font-medium">
                     used of{" "}
                 </span>{" "}
-                50 MB
+                1 GB
             </h2>
             <div className='w-full bg-gray-200  h-2.5 flex'>
                 <div className='bg-blue-600 h-2.5 w-[25%]'></div>
                 <div className='bg-green-600 h-2.5 w-[35%]'></div>
                 <div className='bg-yellow-400 h-2.5 w-[15%]'></div>
             </div>
-
         </div>
     )
 }

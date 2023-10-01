@@ -25,7 +25,7 @@ const CreateFolderModal = () => {
                     name: name,
                     id: docId,
                     createdBy: session.user.email,
-                    parentFolder: parentFolder?.id || null
+                    parentFolder: parentFolder[parentFolder.length - 1]?.id || null,
                 }
             )
             toast.success('Folder created successfully!')

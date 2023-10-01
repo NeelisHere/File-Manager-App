@@ -16,7 +16,7 @@ const UploadFileModal = () => {
     const { setNewFileCreated } = useParentFolder()
     const [loading, setLoading] = useState()
 
-    const docId = Date.now();
+    const docId = Date.now().toString();
     const db = getFirestore(app);
     const storage = getStorage(app);
 
@@ -41,8 +41,9 @@ const UploadFileModal = () => {
                     size: file.size,
                     modifiedAt: file.lastModified,
                     createdBy: session.user.email,
-                    folderId: parentFolder.id,
+                    folderId: parentFolder[parentFolder.length - 1]?.id || null,
                     imageURL: url,
+                    isBookmarked: false,
                     icon: '/document.png'
                 }
             )

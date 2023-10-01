@@ -8,18 +8,18 @@ const Login = () => {
     const { data: session } = useSession()
 	const router = useRouter()
 	useEffect(() => {
-		console.log(session)
+		// console.log(session)
 		if (session) {
 			router.push('/')
 		}
 	}, [router, session])
     return (
-        <div className="border-2 border-red-500 h-screen flex items-center justify-center">
+        <div className="w-screen h-screen flex items-center justify-center">
             <button 
                 className="btn btn-primary"
                 onClick={() => {
                     signIn('google')
-                    console.log(session)
+                    // console.log(session)
                 }}
             >
                 Login with Google

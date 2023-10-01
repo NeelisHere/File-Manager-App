@@ -17,7 +17,11 @@ export default function Home() {
 	const [loading, setLoading] = useState(false)
 	const [childFolders, setChildFolders] = useState([])
 	const [fileList, setFileList] = useState([])
-	const { newFolderCreated, setNewFolderCreated, newFileCreated, setNewFileCreated } = useParentFolder()
+	const { 
+        setParentFolder, 
+        newFolderCreated, setNewFolderCreated, 
+        newFileCreated, setNewFileCreated 
+    } = useParentFolder()
 
 	const fetchChildFolders = async () => {
         setLoading(true)
@@ -69,8 +73,12 @@ export default function Home() {
 
 	useEffect(() => {
         if (session) {
+            setParentFolder([])
             fetchChildFolders()
 			fetchFileList()
+        }
+        if (!session) {
+            router.push('/login')
         }
         if (newFolderCreated) {
             fetchChildFolders()

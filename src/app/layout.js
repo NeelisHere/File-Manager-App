@@ -24,7 +24,7 @@ const RootLayout = ({ children }) => {
 								<div className='col-span-3'>
 									{children}
 								</div>
-								<div className='bg-white p-5 order-first md:order-last'>
+								<div className='bg-white sticky top-0 p-5 order-first md:order-last border-2'>
 									<Storage />
 								</div>
 							</div>

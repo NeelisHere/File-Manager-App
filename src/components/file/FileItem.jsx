@@ -2,11 +2,38 @@
 import Image from "next/image"
 import moment from 'moment'
 import toast from "react-hot-toast"
-import { StarIcon, TrashIcon } from "../Icons"
+import { StarIcon, StarSolidIcon, TrashIcon } from "../Icons"
+import { useEffect, useState } from "react"
+import { doc, getFirestore, setDoc } from "firebase/firestore"
+import { app } from "@/config/firebase-config"
+// import { useSession } from "next-auth/react"
+import Spinner from "../Spinner"
+import { useParentFolder } from "@/context/ParentFolderContext"
 
 
 const FileItem = ({ file }) => {
-    const deleteFile = () => {}
+    const { setNewFileCreated } = useParentFolder()
+    const [loading, setLoading] = useState(false)
+    const db = getFirestore(app)
+
+    const moveToTrash = () => { }
+
+    const bookmarkFile = async () => {
+        setLoading(true)
+        try {
+            const docRef = doc(db, 'Files', file.id.toString())
+            await setDoc(docRef, { isBookmarked: !file.isBookmarked }, { merge: true })
+            const message = !file.isBookmarked ?
+                'File bookmarked successfully!' : 'File removed from bookmarks!'
+            toast.success(message)
+            setNewFileCreated(true)
+        } catch (error) {
+            console.log(error)
+            toast.error('Failed to bookmark file!')
+        }
+        setLoading(false)
+    }
+
     return (
         <div
             className="grid grid-cols-1
@@ -35,11 +62,21 @@ const FileItem = ({ file }) => {
                 <h2 className="text-[15px] w-full col-span-2 ">
                     {(file.size / 1024 ** 2).toFixed(2) + " MB"}
                 </h2>
-                <div className="cursor-pointer flex items-center justify-center " onClick={() => deleteFile(file)}>
+                <div 
+                    className="cursor-pointer flex items-center justify-center" 
+                    onClick={() => moveToTrash(file)}
+                >
                     <TrashIcon />
                 </div>
-                <div className="cursor-pointer flex items-center justify-center" onClick={() => {}}>
-                    <StarIcon />
+                <div
+                    className="cursor-pointer flex items-center justify-center"
+                    onClick={() => bookmarkFile()}
+                >
+                    {
+                        loading ? <Spinner /> : (
+                            file.isBookmarked ? <StarSolidIcon /> : <StarIcon />
+                        )
+                    }
                 </div>
             </div>
         </div>

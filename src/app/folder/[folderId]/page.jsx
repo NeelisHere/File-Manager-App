@@ -7,12 +7,14 @@ import { app } from '@/config/firebase-config'
 import { useParentFolder } from '@/context/ParentFolderContext'
 import { collection, doc, getDoc, getDocs, getFirestore, query, where } from 'firebase/firestore'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const FolderDetails = ({ params }) => {
     const { data: session } = useSession() 
+    const router = useRouter()
     const { 
-        setParentFolder, 
+        parentFolder, setParentFolder, 
         newFolderCreated, setNewFolderCreated, 
         newFileCreated, setNewFileCreated 
     } = useParentFolder()
@@ -31,7 +33,7 @@ const FolderDetails = ({ params }) => {
             if (docSnap.exists()) {
                 const currentFolder = docSnap.data()
                 setFolder({ ...currentFolder })
-                setParentFolder(currentFolder)
+                // setParentFolder(currentFolder)
             }
         } catch (error) {
             console.log(error)
@@ -88,6 +90,17 @@ const FolderDetails = ({ params }) => {
         }
 	}
 
+    const handleNavigation = async (p) => {
+        let targetIndex = null;
+        parentFolder.forEach((parent, index) => {
+            if (parent.id === p.id) {
+                targetIndex = index
+            }
+        })
+        setParentFolder(parentFolder.filter((p, index) => index <= targetIndex))
+        router.push(`/folder/${p.id}`)
+    }
+
     useEffect(() => {
         fetchParentFolder()
     }, [])
@@ -110,6 +123,22 @@ const FolderDetails = ({ params }) => {
     return (
         <div className='px-8 py-4 pt-8 bg-gray-100'>
             <SearchBar />
+            <div className='border-2'>
+                {/* {console.log('->->', parentFolder)} */}
+                {
+                    parentFolder?.map((p, index) => {
+                        return(
+                            <button 
+                                key={index} 
+                                className='btn btn-link'
+                                onClick={() => handleNavigation(p)}    
+                            >
+                                {p.name}
+                            </button>
+                        )
+                    })
+                }
+            </div>
             {
                 folder &&
                 (

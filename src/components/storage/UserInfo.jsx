@@ -7,10 +7,10 @@ const UserInfo = () => {
     const { data: session } = useSession()
 
     return (
-        <div className='border-2'>
+        <div className='bg-[#f4f4f4] px-3 rounded-lg'>
             {
                 session ?
-                    <div className='flex gap-2 items-center'>
+                    <div className='flex gap-2 items-center py-2'>
                         <Image
                             src={session.user.image}
                             alt='user-image'

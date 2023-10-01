@@ -2,24 +2,28 @@ import { HomeIcon, TrashIcon, StarIcon, FolderIcon } from "@/components/Icons"
 
 const menuList = [
     {
-        id: 1,
+        id: 0,
         title: 'Home',
-        icon: <HomeIcon />
+        icon: <HomeIcon />,
+        route: '/'
+    },
+    {
+        id: 1,
+        title: 'My files',
+        icon: <FolderIcon />,
+        route: '/myfiles'
     },
     {
         id: 2,
         title: 'Bookmarks',
-        icon: <StarIcon />
+        icon: <StarIcon />,
+        route: '/bookmarks'
     },
     {
         id: 3,
-        title: 'My files',
-        icon: <FolderIcon />
-    },
-    {
-        id: 4,
         title: 'Trash',
-        icon: <TrashIcon />
+        icon: <TrashIcon />,
+        route: '/trash'
     }
 ]
 

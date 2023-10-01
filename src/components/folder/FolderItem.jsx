@@ -1,10 +1,13 @@
 'use client'
+import { useParentFolder } from "@/context/ParentFolderContext"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 const FolderItem = ({ folder }) => {
     const router = useRouter()
+    const { parentFolder, setParentFolder } = useParentFolder()
     const handleClick = () => {
+        setParentFolder([...parentFolder, folder])
         router.push(`/folder/${folder.id}`)
     }
     return (
