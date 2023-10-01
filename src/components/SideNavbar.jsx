@@ -11,7 +11,7 @@ const SideNavbar = () => {
     return (
         <div className='border-2 p-5 w-[20%] bg-white h-screen sticky top-0 z-10'>
             <div className='w-[100%] flex justify-center mt-6'>
-                <Image src={'next.svg'} width={150} height={60}/>
+                <Image src={'/next.svg'} alt="app-logo" width={150} height={60}/>
             </div>
             <div className="my-8 py-2">
                 <button 
@@ -54,7 +54,6 @@ const SideNavbar = () => {
                 <CreateFolderModal />
             </dialog>
             <dialog id="upload-file-modal" className="modal">
-                {/* <UploadFileModal /> */}
                 <UploadFileModal />
             </dialog>
         </div>

@@ -4,6 +4,7 @@ import Provider from '../components/Provider'
 // import Toast from '@/components/Toast'
 import { Toaster } from 'react-hot-toast';
 import ParentFolderProvider from '@/context/ParentFolderContext';
+import Storage from '@/components/storage/Storage';
 
 export const metadata = {
 	title: 'Cloud-File-Manager',
@@ -23,7 +24,9 @@ const RootLayout = ({ children }) => {
 								<div className='col-span-3'>
 									{children}
 								</div>
-								<div className='bg-green-500'>storage</div>
+								<div className='bg-white p-5 order-first md:order-last'>
+									<Storage />
+								</div>
 							</div>
 						</main>
 					</ParentFolderProvider>
