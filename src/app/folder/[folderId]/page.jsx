@@ -24,6 +24,13 @@ const FolderDetails = ({ params }) => {
     const [folder, setFolder] = useState(null)
     const db = getFirestore(app)
 
+    useEffect(() => {
+        //hack to fix the issue of loosing the navigation stack when the browser is reloaded
+        if (params.folderId && parentFolder.length === 0) {
+            router.push('/')
+        }
+    }, [])
+
     const fetchParentFolder = async () => {
         setLoading(true)
         try {

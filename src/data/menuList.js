@@ -19,12 +19,6 @@ const menuList = [
         icon: <StarIcon />,
         route: '/bookmarks'
     },
-    {
-        id: 3,
-        title: 'Trash',
-        icon: <TrashIcon />,
-        route: '/trash'
-    }
 ]
 
 export default menuList

@@ -4,7 +4,7 @@ import moment from 'moment'
 import toast from "react-hot-toast"
 import { StarIcon, StarSolidIcon, TrashIcon } from "../Icons"
 import { useEffect, useState } from "react"
-import { doc, getFirestore, setDoc } from "firebase/firestore"
+import { deleteDoc, doc, getFirestore, setDoc } from "firebase/firestore"
 import { app } from "@/config/firebase-config"
 // import { useSession } from "next-auth/react"
 import Spinner from "../Spinner"
@@ -16,7 +16,20 @@ const FileItem = ({ file }) => {
     const [loading, setLoading] = useState(false)
     const db = getFirestore(app)
 
-    const moveToTrash = () => { }
+    const handleDeleteFile = async (file) => {
+        // toast(file.id)
+        try {
+            setLoading(true)
+            await deleteDoc(doc(db, 'Files', file.id.toString()))
+            setNewFileCreated(true)
+            toast.success('File deleted successfully!')
+        } catch (error) {
+            console.log(error)
+            toast.error('Error deleting file!')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const bookmarkFile = async () => {
         setLoading(true)
@@ -47,7 +60,6 @@ const FileItem = ({ file }) => {
                     alt="file-icon"
                     width={26}
                     height={20}
-                    on
                 />
                 <h2 className="text-[15px] truncate">
                     {file.name}
@@ -64,9 +76,11 @@ const FileItem = ({ file }) => {
                 </h2>
                 <div 
                     className="cursor-pointer flex items-center justify-center" 
-                    onClick={() => moveToTrash(file)}
+                    onClick={() => handleDeleteFile(file)}
                 >
-                    <TrashIcon />
+                    {
+                        loading? <Spinner /> : <TrashIcon /> 
+                    }
                 </div>
                 <div
                     className="cursor-pointer flex items-center justify-center"
