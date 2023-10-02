@@ -130,8 +130,8 @@ const FolderDetails = ({ params }) => {
     return (
         <div className='px-8 py-4 pt-8 bg-gray-100'>
             <SearchBar />
-            <div className='border-2'>
-                {/* {console.log('->->', parentFolder)} */}
+            <div className='flex flex-wrap'>
+                {/* folder navigation history at the top */}
                 {
                     parentFolder?.map((p, index) => {
                         return(
@@ -150,7 +150,12 @@ const FolderDetails = ({ params }) => {
                 folder &&
                 (
                     loading?
-                    <Spinner />:<FolderList folderList={childFolders} title={folder?.name} />
+                    <Spinner />:
+                    <FolderList 
+                        folderList={childFolders} 
+                        title={folder?.name} 
+                        parentFolderId={params.folderId}  
+                    />
                 )
             }
             {
