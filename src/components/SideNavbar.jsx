@@ -23,13 +23,13 @@ const SideNavbar = () => {
                         className="btn btn-primary w-[100%] my-1"
                         onClick={() => document.getElementById('upload-file-modal').showModal()}
                     >
-                        create new file
+                        upload new files
                     </button>
                     <button
                         className="btn btn-primary w-[100%] my-1"
                         onClick={() => document.getElementById('create-folder-modal').showModal()}
                     >
-                        create new folder
+                        create new folders
                     </button>
                 </div>
                 <div className="my-8 py-2">

@@ -2,7 +2,7 @@
 import Image from "next/image"
 import moment from 'moment'
 import toast from "react-hot-toast"
-import { StarIcon, StarSolidIcon, TrashIcon } from "../Icons"
+import { CopyIcon, MoveIcon, StarIcon, StarSolidIcon, TrashIcon, VerticalDotsIcon } from "../Icons"
 import { useEffect, useState } from "react"
 import { deleteDoc, doc, getFirestore, setDoc } from "firebase/firestore"
 import { app } from "@/config/firebase-config"
@@ -15,6 +15,24 @@ const FileItem = ({ file }) => {
     const { setNewFileCreated } = useParentFolder()
     const [loading, setLoading] = useState(false)
     const db = getFirestore(app)
+
+    const handleDuplicateFile = async () => {
+        const docId = Date.now().toString()
+        try {
+            setLoading(true)
+            await setDoc(
+                doc(db, 'Files', docId),
+                { ...file, id: docId }
+            )
+            setNewFileCreated(true)
+            toast.success('Duplicate file created successfully!')
+        } catch (error) {
+            console.log(error)
+            toast.error('Error creating duplicate file!')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleDeleteFile = async (file) => {
         // toast(file.id)
@@ -70,18 +88,20 @@ const FileItem = ({ file }) => {
                     {moment(file.modifiedAt).format("MMM DD, YYYY")}
                     {/* { file.modifiedAt } */}
                 </h2>
-
-                <h2 className="text-[15px] w-full col-span-2 ">
+                <h2 className="text-[15px] w-full col-span-2">
                     {(file.size / 1024 ** 2).toFixed(2) + " MB"}
                 </h2>
-                <div 
-                    className="cursor-pointer flex items-center justify-center" 
+
+                {/* 
+                <div
+                    className="cursor-pointer flex items-center justify-center"
                     onClick={() => handleDeleteFile(file)}
                 >
                     {
-                        loading? <Spinner /> : <TrashIcon /> 
+                        loading ? <Spinner /> : <TrashIcon />
                     }
-                </div>
+                </div> 
+                */}
                 <div
                     className="cursor-pointer flex items-center justify-center"
                     onClick={() => bookmarkFile()}
@@ -92,6 +112,41 @@ const FileItem = ({ file }) => {
                         )
                     }
                 </div>
+                {
+                    <div className="dropdown flex justify-center">
+                        <label tabIndex={0} className="cursor-pointer">
+                            <VerticalDotsIcon />
+                        </label>
+                        <ul tabIndex={0} className="bg-white cursor-pointer dropdown-content z-[1] menu p-2 shadow rounded-box w-52">
+                            <li
+                                className=''
+                                onClick={() => toast('hi')}
+                            >
+                                <a>
+                                    {loading ? <Spinner /> : <MoveIcon />}
+                                    Move to
+                                </a>
+                            </li>
+                            <li
+                                className=''
+                                onClick={handleDuplicateFile}
+                            >
+                                <a>
+                                    {loading ? <Spinner /> : <CopyIcon />}
+                                    Make duplicate
+                                </a>
+                            </li>
+                            <li>
+                                <a onClick={() => handleDeleteFile(file)}>
+                                    {
+                                        loading ? <Spinner /> : <TrashIcon />
+                                    }
+                                    Delete File
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
             </div>
         </div>
     )
