@@ -42,12 +42,16 @@ const FolderList = ({ folderList, title, parentFolderId }) => {
             setNewFolderCreated(true)
             setNewFileCreated(true)
             toast.success('Folder deleted!')
-            const splittedRoute = window.location.pathname.split('/')
-            const deletedFolderId = splittedRoute[splittedRoute.length]
-            if (deletedFolderId !== '') {
-                toast.success('All sub-files and folders are shifted to the home folder.')
+            if (typeof window !== "undefined") {
+                const splittedRoute = window.location.pathname.split('/')
+                const deletedFolderId = splittedRoute[splittedRoute.length]
+                if (deletedFolderId !== '') {
+                    toast.success('All sub-files and folders are shifted to the home folder.')
+                }
+                router.push('/')
+            } else {
+                throw new Error()
             }
-            router.push('/')
         } catch (error) {
             console.log(error)
             toast.error('Failed to delete folder!')
@@ -60,6 +64,7 @@ const FolderList = ({ folderList, title, parentFolderId }) => {
             <div className='flex justify-between'>
                 <h2 className='text-[24px] font-bold items-center '>{title}</h2>
                 {
+                    (typeof window !== "undefined") &&
                     (window.location.pathname !== '/') &&
                     <div className="flex items-center justify-center gap-8">
                         <button

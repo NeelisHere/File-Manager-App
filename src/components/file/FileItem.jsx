@@ -73,7 +73,14 @@ const FileItem = ({ file }) => {
             cursor-pointer hover:bg-gray-100
             p-3 rounded-md"
         >
-            <div className="flex gap-2 items-center" onClick={() => window.open(file.imageURL)}>
+            <div 
+                className="flex gap-2 items-center" 
+                onClick={() => {
+                    if (typeof window !== "undefined") {
+                        window.open(file.imageURL)
+                    }
+                }}
+            >
                 <Image
                     src={file.icon}
                     alt="file-icon"
