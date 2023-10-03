@@ -20,11 +20,11 @@ const RootLayout = ({ children }) => {
 					<ParentFolderProvider>
 						<main className="flex">
 							<SideNavbar />
-							<div className='grid grid-cols-1 md:grid-cols-4 w-full '>
+							<div className='grid grid-cols-4 md:grid-cols-4 w-full '>
 								<div className='col-span-3'>
 									{children}
 								</div>
-								<div className='bg-white sticky top-0 p-5 order-first md:order-last border-2'>
+								<div className='bg-white h-screen sticky top-0 z-10 p-5 order-first md:order-last border-2'>
 									<Storage />
 								</div>
 							</div>
