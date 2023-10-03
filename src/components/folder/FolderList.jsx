@@ -7,6 +7,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { MoveIcon } from '../Icons'
 import MoveFileModal from '../file/MoveFileModal'
+import MoveFolderModal from './MoveFolderModal'
 
 const FolderList = ({ folderList, title, parentFolderId }) => {
     const router = useRouter()
@@ -74,10 +75,11 @@ const FolderList = ({ folderList, title, parentFolderId }) => {
                             <MoveIcon /> Move
                         </button>
                         <dialog id="move-folder-modal" className="modal">
-                            {/* <MoveFolderModal 
-                                content={{ id: window.location.pathname.split('/').slice(-1).pop() }} 
-                                type={'folder'} 
-                            /> */}
+                            <MoveFolderModal 
+                                currentFolderId={
+                                    window.location.pathname.split('/').slice(-1).pop()
+                                } 
+                            />
                         </dialog>
                         <span
                             className='btn btn-ghost flex items-center text-red-400 font-normal text-[14px]'

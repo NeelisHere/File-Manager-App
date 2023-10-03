@@ -9,14 +9,14 @@ import Spinner from "@/components/Spinner"
 import Image from "next/image"
 import toast from "react-hot-toast"
 
-const MoveFolderModal = ({ content, type }) => {
+const MoveFolderModal = ({ currentFolderId }) => {
 
     const db = getFirestore(app)
     const router = useRouter()
     const { data: session } = useSession()
     const [loading, setLoading] = useState(false)
     const [folderList, setFolderList] = useState([])
-    const { newFileCreated, setNewFileCreated, setNewFolderCreated } = useParentFolder()
+    const { setNewFileCreated, setNewFolderCreated } = useParentFolder()
 
     const fetchFolderList = async () => {
         setLoading(true)
@@ -47,41 +47,33 @@ const MoveFolderModal = ({ content, type }) => {
     }, [session, folderList])
 
     const handleMove = async (folder) => {
+        // toast(`${currentFolderId} => ${folder.name}`)
         try {
             setLoading(true)
-            if (type === 'file') {
-                // const file = content
-                const docRef = doc(db, 'Files', content.id.toString())
-                await setDoc(docRef, { folderId: folder.id }, { merge: true })
-            } else {
-                // const _folder = content
-                const docRef = doc(db, 'Folders', content.id.toString())
-                await setDoc(docRef, { parentFolder: folder.id }, { merge: true })
-            }
-            toast.success(`${type === 'file' ? 'File' : 'Folder'} moved successfully!`)
+            const docRef = doc(db, 'Folders', currentFolderId.toString())
+            await setDoc(
+                docRef, 
+                { parentFolder: folder.id }, 
+                { merge: true }
+            )
+            toast.success(`Folder moved successfully!`)
             router.push('/')
             setNewFileCreated(true)
             setNewFolderCreated(true)
         } catch (error) {
             console.log(error)
-            toast.error(`Error moving ${type === 'file' ? 'file' : 'folder'}!`)
+            toast.error(`Error moving folder!`)
         } finally {
             setLoading(false)
         }
     }
 
     const handleMoveToHome = async () => {
-        toast(type)
         try {
             setLoading(true)
-            if (type === 'file') {
-                const docRef = doc(db, 'Files', content.id.toString())
-                await setDoc(docRef, { folderId: null }, { merge: true })
-            } else {
-                const docRef = doc(db, 'Folders', content.id.toString())
-                await setDoc(docRef, { parentFolder: null }, { merge: true })
-            }
-            toast.success(`${type === 'file' ? 'File' : 'Folder'} moved successfully!`)
+            const docRef = doc(db, 'Folders', currentFolderId.toString())
+            await setDoc(docRef, { parentFolder: null }, { merge: true })
+            toast.success(`Folder moved successfully!`)
             router.push('/')
             setNewFileCreated(true)
             setNewFolderCreated(true)
