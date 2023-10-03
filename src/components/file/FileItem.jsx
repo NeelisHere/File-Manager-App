@@ -12,7 +12,7 @@ import { useParentFolder } from "@/context/ParentFolderContext"
 import MoveFileModal from "./MoveFileModal"
 
 
-const FileItem = ({ file }) => {
+const FileItem = ({ file, setCurrentFile }) => {
     const { setNewFileCreated } = useParentFolder()
     const [loading, setLoading] = useState(false)
     const db = getFirestore(app)
@@ -100,16 +100,6 @@ const FileItem = ({ file }) => {
                     {(file.size / 1024 ** 2).toFixed(2) + " MB"}
                 </h2>
 
-                {/* 
-                <div
-                    className="cursor-pointer flex items-center justify-center"
-                    onClick={() => handleDeleteFile(file)}
-                >
-                    {
-                        loading ? <Spinner /> : <TrashIcon />
-                    }
-                </div> 
-                */}
                 <div
                     className="cursor-pointer flex items-center justify-center"
                     onClick={() => bookmarkFile()}
@@ -120,6 +110,7 @@ const FileItem = ({ file }) => {
                         )
                     }
                 </div>
+                
                 {
                     <div className="dropdown flex justify-center">
                         <label tabIndex={0} className="cursor-pointer">
@@ -128,15 +119,18 @@ const FileItem = ({ file }) => {
                         <ul tabIndex={0} className="bg-white cursor-pointer dropdown-content z-[1] menu p-2 shadow rounded-box w-52">
                             <li
                                 className=''
-                                onClick={()=>document.getElementById('move-file-modal').showModal()}
+                                onClick={()=>{
+                                    setCurrentFile(file)
+                                    document.getElementById('move-file-modal').showModal()
+                                }}
                             >
                                 <a>
                                     {loading ? <Spinner /> : <MoveIcon />}
                                     Move to
                                 </a>
-                                <dialog id="move-file-modal" className="modal">
-                                    <MoveFileModal content={file} type={'file'} />
-                                </dialog>
+                                {/* <dialog id="move-file-modal" className="modal">
+                                    <MoveFileModal file={file} />
+                                </dialog> */}
                             </li>
 
                             <li

@@ -1,8 +1,10 @@
 'use client'
+import { useState } from "react"
 import FileItem from "./FileItem"
+import MoveFileModal from "./MoveFileModal"
 
 const FileList = ({ fileList, title }) => {
-
+    const [currentFile, setCurrentFile] = useState(null)
     return (
         <div className='bg-white my-8 p-5 rounded-lg'>
             <h2 className='text-[24px] font-bold items-center '>{title}</h2>
@@ -19,10 +21,18 @@ const FileList = ({ fileList, title }) => {
             {
                 fileList?.map((item, index) => (
                     <div key={index}>
-                        <FileItem file={item} key={index} />
+                        <FileItem 
+                            key={index} 
+                            file={item} 
+                            // currentFile={currentFile}
+                            setCurrentFile={setCurrentFile}
+                        />
                     </div>
                 ))
             }
+            <dialog id="move-file-modal" className="modal">
+                <MoveFileModal file={currentFile} />
+            </dialog>
         </div>
     )
 }

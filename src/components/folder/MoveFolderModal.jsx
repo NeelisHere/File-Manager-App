@@ -9,7 +9,7 @@ import Spinner from "@/components/Spinner"
 import Image from "next/image"
 import toast from "react-hot-toast"
 
-const MoveFileModal = ({ file }) => {
+const MoveFolderModal = ({ content, type }) => {
 
     const db = getFirestore(app)
     const router = useRouter()
@@ -49,32 +49,45 @@ const MoveFileModal = ({ file }) => {
     const handleMove = async (folder) => {
         try {
             setLoading(true)
-            const docRef = doc(db, 'Files', file.id.toString())
-            await setDoc(docRef, { folderId: folder.id }, { merge: true })
-            toast.success(`File moved successfully!`)
+            if (type === 'file') {
+                // const file = content
+                const docRef = doc(db, 'Files', content.id.toString())
+                await setDoc(docRef, { folderId: folder.id }, { merge: true })
+            } else {
+                // const _folder = content
+                const docRef = doc(db, 'Folders', content.id.toString())
+                await setDoc(docRef, { parentFolder: folder.id }, { merge: true })
+            }
+            toast.success(`${type === 'file' ? 'File' : 'Folder'} moved successfully!`)
             router.push('/')
             setNewFileCreated(true)
             setNewFolderCreated(true)
         } catch (error) {
             console.log(error)
-            toast.error(`Error moving file!`)
+            toast.error(`Error moving ${type === 'file' ? 'file' : 'folder'}!`)
         } finally {
             setLoading(false)
         }
     }
 
     const handleMoveToHome = async () => {
+        toast(type)
         try {
             setLoading(true)
-            const docRef = doc(db, 'Files', file?.id.toString())
-            await setDoc(docRef, { folderId: null }, { merge: true })
-            toast.success(`File moved successfully!`)
+            if (type === 'file') {
+                const docRef = doc(db, 'Files', content.id.toString())
+                await setDoc(docRef, { folderId: null }, { merge: true })
+            } else {
+                const docRef = doc(db, 'Folders', content.id.toString())
+                await setDoc(docRef, { parentFolder: null }, { merge: true })
+            }
+            toast.success(`${type === 'file' ? 'File' : 'Folder'} moved successfully!`)
             router.push('/')
             setNewFileCreated(true)
             setNewFolderCreated(true)
         } catch (error) {
             console.log(error)
-            toast.error(`Error moving file!`)
+            toast.error(`Error moving ${type === 'file' ? 'file' : 'folder'}!`)
         } finally {
             setLoading(false)
         }
@@ -83,6 +96,7 @@ const MoveFileModal = ({ file }) => {
     return (
         <div className="max-w-none w-[500px] modal-box bg-white text-black">
             <form method="dialog">
+                {/* if there is a button in form, it will close the modal */}
                 <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
             <h3 className="font-bold text-lg mb-4 text-center">Move To</h3>
@@ -123,4 +137,4 @@ const MoveFileModal = ({ file }) => {
     )
 }
 
-export default MoveFileModal
+export default MoveFolderModal

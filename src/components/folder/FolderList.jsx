@@ -69,15 +69,15 @@ const FolderList = ({ folderList, title, parentFolderId }) => {
                     <div className="flex items-center justify-center gap-8">
                         <button
                             className='btn btn-ghost text-primary flex items-center font-normal text-[14px]'
-                            onClick={()=>document.getElementById('move-file-modal').showModal()}
+                            onClick={()=>document.getElementById('move-folder-modal').showModal()}
                         >
                             <MoveIcon /> Move
                         </button>
-                        <dialog id="move-file-modal" className="modal">
-                            <MoveFileModal 
+                        <dialog id="move-folder-modal" className="modal">
+                            {/* <MoveFolderModal 
                                 content={{ id: window.location.pathname.split('/').slice(-1).pop() }} 
                                 type={'folder'} 
-                            />
+                            /> */}
                         </dialog>
                         <span
                             className='btn btn-ghost flex items-center text-red-400 font-normal text-[14px]'
