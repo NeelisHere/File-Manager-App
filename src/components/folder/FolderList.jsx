@@ -5,6 +5,8 @@ import { collection, getFirestore, query, getDocs, updateDoc, where, deleteDoc, 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { MoveIcon } from '../Icons'
+import MoveFileModal from '../file/MoveFileModal'
 
 const FolderList = ({ folderList, title, parentFolderId }) => {
     const router = useRouter()
@@ -18,7 +20,7 @@ const FolderList = ({ folderList, title, parentFolderId }) => {
             setLoading(true)
             //================ move all files to home ===================
             const filesQuery = query(
-                collection(db, 'Files'), 
+                collection(db, 'Files'),
                 where('folderId', '==', parentFolderId)
             );
             const filesSnapshot = await getDocs(filesQuery);
@@ -27,7 +29,7 @@ const FolderList = ({ folderList, title, parentFolderId }) => {
             });
             //============== move all the folders to home =====================
             const foldersQuery = query(
-                collection(db, 'Folders'), 
+                collection(db, 'Folders'),
                 where('parentFolder', '==', parentFolderId)
             );
             const foldersSnapshot = await getDocs(foldersQuery);
@@ -57,12 +59,30 @@ const FolderList = ({ folderList, title, parentFolderId }) => {
         <div className='bg-white my-8 p-5 rounded-lg'>
             <div className='flex justify-between'>
                 <h2 className='text-[24px] font-bold items-center '>{title}</h2>
-                <span
-                    className='btn btn-ghost flex items-center text-red-400 font-normal text-[16px]'
-                    onClick={handleDeleteFolder}
-                >
-                    Delete
-                </span>
+                {
+                    (window.location.pathname !== '/') &&
+                    <div className="flex items-center justify-center gap-8">
+                        <button
+                            className='btn btn-ghost text-primary flex items-center font-normal text-[14px]'
+                            onClick={()=>document.getElementById('move-file-modal').showModal()}
+                        >
+                            <MoveIcon /> Move
+                        </button>
+                        <dialog id="move-file-modal" className="modal">
+                            <MoveFileModal 
+                                content={{ id: window.location.pathname.split('/').slice(-1).pop() }} 
+                                type={'folder'} 
+                            />
+                        </dialog>
+                        <span
+                            className='btn btn-ghost flex items-center text-red-400 font-normal text-[14px]'
+                            onClick={handleDeleteFolder}
+                        >
+                            Delete
+                        </span>
+                    </div>
+                }
+
             </div>
             <div className='mt-4 grid grid-col-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2'>
                 {

@@ -9,6 +9,7 @@ import { app } from "@/config/firebase-config"
 // import { useSession } from "next-auth/react"
 import Spinner from "../Spinner"
 import { useParentFolder } from "@/context/ParentFolderContext"
+import MoveFileModal from "./MoveFileModal"
 
 
 const FileItem = ({ file }) => {
@@ -120,13 +121,17 @@ const FileItem = ({ file }) => {
                         <ul tabIndex={0} className="bg-white cursor-pointer dropdown-content z-[1] menu p-2 shadow rounded-box w-52">
                             <li
                                 className=''
-                                onClick={() => toast('hi')}
+                                onClick={()=>document.getElementById('move-file-modal').showModal()}
                             >
                                 <a>
                                     {loading ? <Spinner /> : <MoveIcon />}
                                     Move to
                                 </a>
+                                <dialog id="move-file-modal" className="modal">
+                                    <MoveFileModal content={file} type={'file'} />
+                                </dialog>
                             </li>
+
                             <li
                                 className=''
                                 onClick={handleDuplicateFile}
@@ -136,6 +141,7 @@ const FileItem = ({ file }) => {
                                     Make duplicate
                                 </a>
                             </li>
+
                             <li>
                                 <a onClick={() => handleDeleteFile(file)}>
                                     {
@@ -144,6 +150,7 @@ const FileItem = ({ file }) => {
                                     Delete File
                                 </a>
                             </li>
+
                         </ul>
                     </div>
                 }
