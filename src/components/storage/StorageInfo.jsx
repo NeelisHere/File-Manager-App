@@ -35,7 +35,7 @@ const StorageInfo = () => {
                 </span>{" "}
                 1 GB
             </h2>
-            <div className='w-full bg-gray-200  h-2.5 flex'>
+            <div className='w-full bg-gray-200 h-2.5 flex'>
                 <div className='bg-blue-600 h-2.5 w-[25%]'></div>
                 <div className='bg-green-600 h-2.5 w-[35%]'></div>
                 <div className='bg-yellow-400 h-2.5 w-[15%]'></div>
