@@ -10,7 +10,6 @@ function StorageDetails() {
     const { data: session } = useSession()
     const db = getFirestore(app)
     const { newFileCreated } = useParentFolder()
-
     const initialStorageList = [
         {
             id: 1,
@@ -41,7 +40,6 @@ function StorageDetails() {
             logo: 'M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z'
         },
     ];
-
     const [ storageList, setStorageList ] = useState(initialStorageList)
 
     const fetchFileList = async () => {
@@ -51,15 +49,15 @@ function StorageDetails() {
                 where('createdBy', '==', session.user.email)
             )
             const querySnapshot = await getDocs(fetchFilesQuery)
-            querySnapshot.forEach((doc) => {
-                const currentFile = doc.data()
-                const fileCategory = classifyFiles(currentFile.name)
-                setStorageList((prev) => {
-                    let newList = initialStorageList
+            setStorageList((prev) => {
+                let newList = initialStorageList
+                querySnapshot.forEach((doc) => {
+                    const currentFile = doc.data()
+                    const fileCategory = classifyFiles(currentFile.name)
                     newList[fileCategory - 1].totalFile += 1
                     newList[fileCategory - 1].size += currentFile.size
-                    return newList
                 })
+                return newList
             })
         } catch (error) {
             console.log(error)
